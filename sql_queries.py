@@ -4,10 +4,15 @@ import configparser
 config = configparser.ConfigParser()
 config.read('dwh.cfg')
 
+ARN             = config.get('IAM_ROLE', 'ARN')
+LOG_DATA        = config.get('S3', 'LOG_DATA')
+LOG_JSONPATH    = config.get('S3', 'LOG_JSONPATH')
+SONG_DATA       = config.get('S3', 'SONG_DATA')
+
 # DROP TABLES
 
 staging_events_table_drop = "DROP TABLE IF EXISTS log_staging"
-staging_songs_table_drop = "DROP TABLE IF EXISTS song_staging"
+staging_songs_table_drop  = "DROP TABLE IF EXISTS song_staging"
 
 # CREATE TABLES
 
@@ -17,10 +22,10 @@ CREATE TABLE IF NOT EXISTS song_staging (
     artist_id VARCHAR NULL,
     artist_latitude FLOAT NULL,
     artist_longitude FLOAT NULL,
-    artist_location VARCHAR NULL,
+    artist_location VARCHAR(500) NULL,
     artist_name VARCHAR(500) NULL,
     song_id VARCHAR NULL,
-    title VARCHAR NULL,
+    title VARCHAR(500) NULL,
     duration FLOAT NULL,
     year int NULL
     );
@@ -58,16 +63,15 @@ from {}
 iam_role {}
 json {}
 region 'us-west-2'
-""").format(config['S3']['LOG_DATA'], config["IAM_ROLE"]["ARN"], config['S3']['LOG_JSONPATH'])
+""").format(LOG_DATA, ARN, LOG_JSONPATH)
 
 staging_songs_copy=("""
 copy song_staging 
 from {} 
 iam_role {}
 json 'auto'
-compupdate on
-region 'us-west-2'
-""").format(config['S3']['SONG_DATA'], config["IAM_ROLE"]["ARN"])
+region 'us-west-2';
+""").format(SONG_DATA, ARN)
 
 
 # QUERY LISTS
