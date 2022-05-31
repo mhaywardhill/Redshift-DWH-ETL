@@ -2,7 +2,7 @@ import logging
 import sys
 import configparser
 import psycopg2
-from sql_queries import copy_table_queries
+from sql_queries import copy_table_queries, insert_table_queries
 import os
 
 logging.basicConfig(
@@ -11,7 +11,15 @@ logging.basicConfig(
 
 
 def load_staging_tables(cur, conn):
+    """ create dimensions and fact table and load staging tables"""
     for query in copy_table_queries:
+        cur.execute(query)
+        conn.commit()
+
+
+def insert_tables(cur, conn):
+    """dimensions and fact table from staging """
+    for query in insert_table_queries:
         cur.execute(query)
         conn.commit()
 
@@ -38,6 +46,11 @@ def main():
     logging.info("Start: load staging tables")
     load_staging_tables(cur, conn)
     logging.info("Finish: load staging tables")
+
+    # load dimensions and fact tables
+    logging.info("Start: load dimensions and fact table")
+    insert_tables(cur, conn)
+    logging.info("Finish: load dimensions and fact table")
 
     if conn:
         cur.close()
