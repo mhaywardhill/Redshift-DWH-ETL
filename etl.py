@@ -11,14 +11,14 @@ logging.basicConfig(
 
 
 def load_staging_tables(cur, conn):
-    """ create dimensions and fact table and load staging tables"""
+    """ load staging tables"""
     for query in copy_table_queries:
         cur.execute(query)
         conn.commit()
 
 
 def insert_tables(cur, conn):
-    """dimensions and fact table from staging """
+    """load dimensions and fact table from staging """
     for query in insert_table_queries:
         cur.execute(query)
         conn.commit()
