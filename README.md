@@ -1,4 +1,4 @@
-#  ETL pipeline, S3 to Redshift
+# S3 to Redshift ETL pipeline
 
 Build an ETL pipeline that extracts data from S3, stages it in Redshift, and then transforms the data into a set of dimensional tables ready for analytics.
 
