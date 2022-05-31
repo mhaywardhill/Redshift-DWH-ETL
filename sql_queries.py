@@ -140,10 +140,9 @@ region 'us-west-2';
 
 songplay_table_insert = ("""
 INSERT INTO songplays (start_time, user_id, level, song_id, artist_id, session_id, location, user_agent)
-SELECT DISTINCT timestamp 'epoch' + st.ts/1000 * INTERVAL '1 second' as start_time, st.userid, st.level, s.song_id, a.artist_id, st.sessionid, st.location, st.userAgent FROM log_staging st 
-JOIN artists a ON st.artist = a.Name 
-JOIN songs s ON st.song = s.title
-WHERE st.page = 'NextSong';
+SELECT DISTINCT timestamp 'epoch' + l.ts/1000 * INTERVAL '1 second' as start_time, l.userid, l.level, s.song_id, s.artist_id, l.sessionid, l.location, l.userAgent FROM log_staging l 
+JOIN song_staging AS s ON (l.artist = s.artist_name)
+WHERE l.page = 'NextSong';
 """)
 
 user_table_insert = ("""
