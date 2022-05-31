@@ -26,7 +26,7 @@ make install
 python ./create_tables.py
 ```
 
-### 3. Copy data from S3 to Redshift
+### 4. Copy data from S3 to Redshift
 
 ```
 python ./etl.py
